@@ -6,7 +6,7 @@ import json
 from faker import Faker
 import random
 
-from models import setup_db, Actor, Movie
+from models.models import setup_db, Actor, Movie
 
 app = Flask(__name__)
 database_path = os.getenv(sys.argv[1])

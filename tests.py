@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import date
 
 from app import create_app
-from models import setup_db, Movie, Actor
+from models.models import setup_db, Movie, Actor
 
 
 class MovieTestCase(unittest.TestCase):

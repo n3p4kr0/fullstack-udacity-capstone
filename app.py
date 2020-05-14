@@ -5,7 +5,7 @@ import json
 from flask_cors import CORS
 
 from models import setup_db, Actor, Movie
-from auth import AuthError, requires_auth
+from auth.auth import AuthError, requires_auth
 
 
 MOVIES_PER_PAGE = int(os.getenv('MOVIES_PER_PAGE'))
