@@ -92,6 +92,50 @@ def create_app(test_config=None):
         except:
             abort(422)
         
+    #TODO : Allow to add or remove new actors from movie
+    @app.route('/movies/<int:movie_id>', methods=['PATCH'])
+    def update_movie(movie_id):
+        try:
+            movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
+                
+            if movie is None:
+                abort(404)
+            
+            body = request.get_json()
+            
+            if body is None:
+                abort(400)
+                
+            movie.title = body.get('title', movie.title)
+            movie.release_date = body.get('release_date', movie.release_date)
+                
+            movie.update()
+            
+            return jsonify({
+                'success': True,
+                'updated': movie.id
+            })
+            
+        except:
+            abort(422)
+    
+
+    @app.route('/movies/<int:movie_id>', methods=['DELETE'])
+    def delete_movie(movie_id):
+        movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
+            
+        if movie is None:
+            abort(404)
+                
+        movie.delete()
+            
+        total_movies = Movie.query.order_by(Movie.id).count()
+            
+        return jsonify({
+           'success': True,
+           'total_movies': total_movies
+        })
+
 
     '''
     Actors routes
@@ -149,8 +193,52 @@ def create_app(test_config=None):
             
         except:
             abort(422)
-        
-
+            
+            
+    @app.route('/actors/<int:actor_id>', methods=['PATCH'])
+    def update_actor(actor_id):
+        try:
+            # TODO : Check the value of 'gender'
+            actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
+                
+            if actor is None:
+                abort(404)
+            
+            body = request.get_json()
+            
+            if body is None:
+                abort(400)
+                
+            actor.name = body.get('name', actor.name)
+            actor.age = body.get('age', actor.age)
+            actor.gender = body.get('gender', actor.gender)
+                
+            actor.update()
+            
+            return jsonify({
+                'success': True,
+                'updated': actor.id
+            })
+            
+        except:
+            abort(422)
+    
+            
+    @app.route('/actors/<int:actor_id>', methods=['DELETE'])
+    def delete_actor(actor_id):
+        actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
+            
+        if actor is None:
+            abort(404)
+                
+        actor.delete()
+            
+        total_actors = Actor.query.order_by(Actor.id).count()
+            
+        return jsonify({
+           'success': True,
+           'total_actors': total_actors
+        })
 
 
     # Error Handling

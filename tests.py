@@ -111,6 +111,8 @@ class MovieTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         
+    # TODO ADD TESTS FOR DELETE AND PATCH
+        
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
