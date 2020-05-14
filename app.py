@@ -10,6 +10,7 @@ from auth import AuthError, requires_auth
 
 MOVIES_PER_PAGE = int(os.getenv('MOVIES_PER_PAGE'))
 ACTORS_PER_PAGE = int(os.getenv('ACTORS_PER_PAGE'))
+GENDERS = ['male', 'female']
 
 
 def create_app(test_config=None):
@@ -96,8 +97,6 @@ def create_app(test_config=None):
         except:
             abort(422)
         
-        
-    #TODO : Allow to add or remove new actors from movie
     @app.route('/movies/<int:movie_id>', methods=['PATCH'])
     @requires_auth('patch:movies')
     def update_movie(payload, movie_id):
@@ -111,9 +110,17 @@ def create_app(test_config=None):
             
             if body is None:
                 abort(400)
-                
+            
+            # If the user provides a non-existent ID in the list of Actors for the movie, the request cannot be processed
+            if body.get('actors', None) is not None:
+                actors = Actor.query.filter(Actor.id.in_(body.get('actors'))).\
+                    all()
+                if len(actors) is not len(body.get('actors')):
+                    abort(400)
+            
             movie.title = body.get('title', movie.title)
             movie.release_date = body.get('release_date', movie.release_date)
+            movie.actors = actors
             
             movie.update()
             
@@ -193,6 +200,9 @@ def create_app(test_config=None):
             if name is None or age is None or gender is None:
                 abort(400)
                 
+            if gender not in GENDERS:
+                abort(400)
+                
             actor = Actor(name=name, age=age, gender=gender)
             actor.insert()
             
@@ -209,7 +219,6 @@ def create_app(test_config=None):
     @requires_auth('patch:actors')
     def update_actor(payload, actor_id):
         try:
-            # TODO : Check the value of 'gender'
             actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
                 
             if actor is None:
@@ -219,11 +228,23 @@ def create_app(test_config=None):
             
             if body is None:
                 abort(400)
+            
+            # If the user provides a non-existent ID in the list of Movies the Actor has been featured in, the request cannot be processed
+            if body.get('movies', None) is not None:
+                movies = Movie.query.filter(Movie.id.in_(body.get('movies'))).\
+                    all()
+                if len(movies) is not len(body.get('movies')):
+                    abort(400)
+                
                 
             actor.name = body.get('name', actor.name)
             actor.age = body.get('age', actor.age)
             actor.gender = body.get('gender', actor.gender)
-                
+            
+            if actor.gender not in GENDERS:
+                abort(400)
+
+            
             actor.update()
             
             return jsonify({

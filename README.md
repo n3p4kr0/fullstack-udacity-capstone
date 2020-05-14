@@ -8,17 +8,17 @@ It is a basic API backend of a casting agency management system.
 
 Users can create Movies and Actors in the database, and link them (if an Actor is playing in a Movie).
 
-Three roles (RBAC) are defined as is:
+Three roles (RBAC) are defined, as is:
 
-* Casting Assistant
+* **Casting Assistant**
 
 A Casting Assistant is allowed to GET any single Movie or Actor, and to GET the lists of Movies and Actors.
 
-* Casting Director
+* **Casting Director**
 
 A Casting Director can do everything a Casting Assistant is allowed to. They can also remove (DELETE) any Movie or create (POST) one, and update (PATCH) any Movie or Actor.
 
-* Executive Producer
+* **Executive Producer**
 
 An Executive Producer can do everything a Casting Director is allowed to. They can also remove (DELETE) any Actor or create (POST) one.
 

@@ -1,4 +1,5 @@
 import os
+import sys
 from flask import Flask, request, jsonify, abort
 from sqlalchemy import exc
 import json
@@ -8,7 +9,7 @@ import random
 from models import setup_db, Actor, Movie
 
 app = Flask(__name__)
-database_path = os.getenv('DB_TEST_URI')
+database_path = os.getenv(sys.argv[1])
 setup_db(app, database_path)
 
 
