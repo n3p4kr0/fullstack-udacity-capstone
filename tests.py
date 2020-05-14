@@ -58,13 +58,21 @@ class MovieTestCase(unittest.TestCase):
         
     
     
-    def test_post_new_movie(self):
+    def test_post_new_movie_successful(self):
         info = {
             'title': 'Test Movie',
             'release_date': date.today()
         }
         
         res = self.client().post('/movies', json=info)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        
+    
+    def test_delete_movie_successful(self):        
+        res = self.client().delete('/movies/3')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -98,7 +106,7 @@ class MovieTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 404)
     
         
-    def test_post_new_actor(self):
+    def test_post_new_actor_successful(self):
         info = {
             'name': 'Brad Pitt',
             'age': 50,
@@ -111,7 +119,13 @@ class MovieTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         
-    # TODO ADD TESTS FOR DELETE AND PATCH
+    
+    def test_delete_actor_successful(self):        
+        res = self.client().delete('/actors/3')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
         
 
 # Make the tests conveniently executable

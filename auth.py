@@ -5,7 +5,7 @@ from jose import jwt
 from urllib.request import urlopen
 
 
-AUTH0_DOMAIN = 'https://dev-7z99wpjz.eu.auth0.com/'
+AUTH0_DOMAIN = 'dev-7z99wpjz.eu.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'dev'
 
@@ -73,6 +73,8 @@ def get_token_auth_header():
 
 
 def check_permissions(permission, payload):
+    print(permission)
+    print(payload)
     if 'permissions' not in payload:
         raise AuthError({
             'code': 'invalid_claims',

@@ -38,9 +38,10 @@ def create_app(test_config=None):
         
     '''
     Movies routes
-    '''
+    '''    
     @app.route('/movies', methods=['GET'])
-    def get_all_movies():
+    @requires_auth('get:movies')
+    def get_all_movies(payload):
         if request.args.get('page') is None:
             page = 1
         else:
@@ -53,9 +54,10 @@ def create_app(test_config=None):
             'movies': [movie.format() for movie in movies]
         })
         
-        
+    
     @app.route('/movies/<int:movie_id>', methods=['GET'])
-    def get_single_movie(movie_id):
+    @requires_auth('get:movies')
+    def get_single_movie(payload, movie_id):
         movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
         
         if movie is None:
@@ -66,9 +68,11 @@ def create_app(test_config=None):
             'movie': movie.format()
         })
         
-        
+    
+    
     @app.route('/movies', methods=['POST'])
-    def post_movie():
+    @requires_auth('post:movies')
+    def post_movie(payload):
         try:
             body = request.get_json()
             
@@ -92,9 +96,11 @@ def create_app(test_config=None):
         except:
             abort(422)
         
+        
     #TODO : Allow to add or remove new actors from movie
     @app.route('/movies/<int:movie_id>', methods=['PATCH'])
-    def update_movie(movie_id):
+    @requires_auth('patch:movies')
+    def update_movie(payload, movie_id):
         try:
             movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
                 
@@ -108,7 +114,7 @@ def create_app(test_config=None):
                 
             movie.title = body.get('title', movie.title)
             movie.release_date = body.get('release_date', movie.release_date)
-                
+            
             movie.update()
             
             return jsonify({
@@ -121,7 +127,8 @@ def create_app(test_config=None):
     
 
     @app.route('/movies/<int:movie_id>', methods=['DELETE'])
-    def delete_movie(movie_id):
+    @requires_auth('delete:movies')
+    def delete_movie(payload, movie_id):
         movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
             
         if movie is None:
@@ -141,7 +148,8 @@ def create_app(test_config=None):
     Actors routes
     '''
     @app.route('/actors', methods=['GET'])
-    def get_all_actors():
+    @requires_auth('get:actors')
+    def get_all_actors(payload):
         if request.args.get('page') is None:
             page = 1
         else:
@@ -156,7 +164,8 @@ def create_app(test_config=None):
     
     
     @app.route('/actors/<int:actor_id>', methods=['GET'])
-    def get_single_actor(actor_id):
+    @requires_auth('get:actors')
+    def get_single_actor(payload, actor_id):
         actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
         
         if actor is None:
@@ -169,7 +178,8 @@ def create_app(test_config=None):
     
 
     @app.route('/actors', methods=['POST'])
-    def post_actor():
+    @requires_auth('post:actors')
+    def post_actor(payload):
         try:
             body = request.get_json()
             
@@ -194,9 +204,10 @@ def create_app(test_config=None):
         except:
             abort(422)
             
-            
+    
     @app.route('/actors/<int:actor_id>', methods=['PATCH'])
-    def update_actor(actor_id):
+    @requires_auth('patch:actors')
+    def update_actor(payload, actor_id):
         try:
             # TODO : Check the value of 'gender'
             actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
@@ -223,9 +234,10 @@ def create_app(test_config=None):
         except:
             abort(422)
     
-            
+    
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
-    def delete_actor(actor_id):
+    @requires_auth('delete:actors') 
+    def delete_actor(payload, actor_id):
         actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
             
         if actor is None:
