@@ -8,7 +8,8 @@ import random
 from models import setup_db, Actor, Movie
 
 app = Flask(__name__)
-setup_db(app)
+database_path = os.getenv('DB_TEST_URI')
+setup_db(app, database_path)
 
 
 fak = Faker()

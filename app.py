@@ -34,13 +34,18 @@ def create_app(test_config=None):
             'success': True,
             'message': 'Route Working'
         })
+       
         
     '''
     Movies routes
     '''
     @app.route('/movies', methods=['GET'])
     def get_all_movies():
-        page = int(request.args.get('page'))
+        if request.args.get('page') is None:
+            page = 1
+        else:
+            page = int(request.args.get('page'))
+        
         movies = Movie.query.order_by(Movie.id).paginate(page, MOVIES_PER_PAGE).items
         
         return jsonify({
@@ -48,20 +53,105 @@ def create_app(test_config=None):
             'movies': [movie.format() for movie in movies]
         })
         
+        
+    @app.route('/movies/<int:movie_id>', methods=['GET'])
+    def get_single_movie(movie_id):
+        movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
+        
+        if movie is None:
+            abort(404)
+        
+        return jsonify({
+            'success': True,
+            'movie': movie.format()
+        })
+        
+        
+    @app.route('/movies', methods=['POST'])
+    def post_movie():
+        try:
+            body = request.get_json()
+            
+            if body is None:
+                abort(400)
+                
+            title = body.get('title', None)
+            release_date = body.get('release_date', None)
+            
+            if title is None or release_date is None:
+                abort(400)
+                
+            movie = Movie(title=title, release_date=release_date)
+            movie.insert()
+            
+            return jsonify({
+                'success': True,
+                'created': movie.id
+            })
+            
+        except:
+            abort(422)
+        
 
     '''
     Actors routes
     '''
     @app.route('/actors', methods=['GET'])
     def get_all_actors():
-        page = int(request.args.get('page'))
+        if request.args.get('page') is None:
+            page = 1
+        else:
+            page = int(request.args.get('page'))
+        
         actors = Actor.query.order_by(Actor.id).paginate(page, ACTORS_PER_PAGE).items
         
         return jsonify({
             'success': True,
             'actors': [actor.format() for actor in actors]
         })
+    
+    
+    @app.route('/actors/<int:actor_id>', methods=['GET'])
+    def get_single_actor(actor_id):
+        actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
         
+        if actor is None:
+            abort(404)
+        
+        return jsonify({
+            'success': True,
+            'actor': actor.format()
+        })
+    
+
+    @app.route('/actors', methods=['POST'])
+    def post_actor():
+        try:
+            body = request.get_json()
+            
+            if body is None:
+                abort(400)
+                
+            name = body.get('name', None)
+            age = body.get('age', None)
+            gender = body.get('gender', None)
+            
+            if name is None or age is None or gender is None:
+                abort(400)
+                
+            actor = Actor(name=name, age=age, gender=gender)
+            actor.insert()
+            
+            return jsonify({
+                'success': True,
+                'created': actor.id
+            })
+            
+        except:
+            abort(422)
+        
+
+
 
     # Error Handling
     '''

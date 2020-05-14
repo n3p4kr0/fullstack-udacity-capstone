@@ -2,8 +2,9 @@ import os
 import unittest
 import json
 from flask_sqlalchemy import SQLAlchemy
+from datetime import date
 
-from flaskr import create_app
+from app import create_app
 from models import setup_db, Movie, Actor
 
 
@@ -37,7 +38,79 @@ class MovieTestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
+        self.assertEqual(len(data['movies']), 10)
+        
+    
+    def test_get_single_movie_successful(self):
+        res = self.client().get('/movies/6')
+        data = json.loads(res.data)
 
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual((data['movie']['id']), 6)
+        
+    
+    def test_get_single_movie_error_404(self):
+        res = self.client().get('/movies/61993')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        
+    
+    
+    def test_post_new_movie(self):
+        info = {
+            'title': 'Test Movie',
+            'release_date': date.today()
+        }
+        
+        res = self.client().post('/movies', json=info)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        
+        
+    # TESTS FOR ACTORS
+
+    def test_get_actors_successful(self):
+        res = self.client().get('/actors')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(len(data['actors']), 10)
+
+
+    def test_get_single_actor_successful(self):
+        res = self.client().get('/actors/14')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual((data['actor']['id']), 14)
+        
+    
+    def test_get_single_actor_error_404(self):
+        res = self.client().get('/actor/15873')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+    
+        
+    def test_post_new_actor(self):
+        info = {
+            'name': 'Brad Pitt',
+            'age': 50,
+            'gender': 'male'
+        }
+        
+        res = self.client().post('/actors', json=info)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
