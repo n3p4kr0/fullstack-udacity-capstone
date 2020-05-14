@@ -7,8 +7,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-database_name = "casting_agency"
-
 database_path = os.getenv('DB_URI')
 
 db = SQLAlchemy()
@@ -36,12 +34,12 @@ class Movie(db.Model):
     __tablename__ = 'movies'
 
     id = Column(Integer, primary_key=True)
-    title = Column(string, nullable=False)
+    title = Column(String, nullable=False)
     actors = db.relationship('Actor', backref='movie', lazy=True)
 
     def __init__(self, title, release_date):
         self.title = title
-	    self.release_date = release_date
+        self.release_date = release_date
 
     def insert(self):
         db.session.add(self)
@@ -58,7 +56,7 @@ class Movie(db.Model):
         return {
             'id': self.id,
             'title': self.title,
-            'release_date' : self.release_date,
+            'release_date': self.release_date,
             'actors': [actor.name for actor in self.actors]
         }
 
@@ -72,12 +70,12 @@ class Actor(db.Model):
     __tablename__ = 'actors'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    age = Column(Integer)
-    gender = Column(String)
+    name = Column(String, nullable=False)
+    age = Column(Integer, nullable=False)
+    gender = Column(String, nullable=False)
     
 
-    def __init__(self, type):
+    def __init__(self, name, age, gender):
         self.name = name
         self.age = age
         self.gender = gender
