@@ -1,7 +1,8 @@
 import os
-from sqlalchemy import Column, String, Integer, create_engine
+from sqlalchemy import Column, String, Integer, Date, create_engine
 from flask_sqlalchemy import SQLAlchemy
 import json
+from flask_migrate import Migrate
 from dotenv import load_dotenv
 
 
@@ -23,19 +24,31 @@ def setup_db(app, database_path=database_path):
     db.app = app
     db.init_app(app)
     db.create_all()
+    migrate = Migrate(app, db)
+
+
+'''
+Map actors and movies
+'''
+movies_actors = db.Table('movies_actors',
+    db.Column('actor_id', db.Integer, db.ForeignKey('actors.id'), primary_key=True),
+    db.Column('movie_id', db.Integer, db.ForeignKey('movies.id'), primary_key=True)
+)
+
 
 
 '''
 Movie
 '''
 
-
 class Movie(db.Model):
     __tablename__ = 'movies'
 
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
-    actors = db.relationship('Actor', backref='movie', lazy=True)
+    release_date = Column(Date, nullable=False)
+    actors = db.relationship('Actor', secondary=movies_actors, lazy=True,
+        backref=db.backref('movies', lazy=True))
 
     def __init__(self, title, release_date):
         self.title = title
@@ -74,7 +87,6 @@ class Actor(db.Model):
     age = Column(Integer, nullable=False)
     gender = Column(String, nullable=False)
     
-
     def __init__(self, name, age, gender):
         self.name = name
         self.age = age
@@ -91,3 +103,4 @@ class Actor(db.Model):
             'age': self.age,
             'gender': self.gender
         }
+
