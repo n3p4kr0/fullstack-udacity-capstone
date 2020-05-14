@@ -8,6 +8,10 @@ from models import setup_db, Actor, Movie
 from auth import AuthError, requires_auth
 
 
+MOVIES_PER_PAGE = int(os.getenv('MOVIES_PER_PAGE'))
+ACTORS_PER_PAGE = int(os.getenv('ACTORS_PER_PAGE'))
+
+
 def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
@@ -30,7 +34,34 @@ def create_app(test_config=None):
             'success': True,
             'message': 'Route Working'
         })
+        
+    '''
+    Movies routes
+    '''
+    @app.route('/movies', methods=['GET'])
+    def get_all_movies():
+        page = int(request.args.get('page'))
+        movies = Movie.query.order_by(Movie.id).paginate(page, MOVIES_PER_PAGE).items
+        
+        return jsonify({
+            'success': True,
+            'movies': [movie.format() for movie in movies]
+        })
+        
 
+    '''
+    Actors routes
+    '''
+    @app.route('/actors', methods=['GET'])
+    def get_all_actors():
+        page = int(request.args.get('page'))
+        actors = Actor.query.order_by(Actor.id).paginate(page, ACTORS_PER_PAGE).items
+        
+        return jsonify({
+            'success': True,
+            'actors': [actor.format() for actor in actors]
+        })
+        
 
     # Error Handling
     '''
