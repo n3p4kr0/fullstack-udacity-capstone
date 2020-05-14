@@ -8,19 +8,38 @@ It is a basic API backend of a casting agency management system.
 
 Users can create Movies and Actors in the database, and link them (if an Actor is playing in a Movie).
 
-Three roles (RBAC) are defined, as is:
+* How to get a token?
+
+Just connect to the following URL, using the credentials for one of the following rols. You'll be returned an ```access_token```.
+
+https://dev-7z99wpjz.eu.auth0.com/authorize?audience=dev&response_type=token&client_id=fuSpdruotPgvrV3wypZHB8Rt45OC20IA&redirect_uri=https://capstone-casting-farem.herokuapp.com
+
+Three roles (RBAC) are defined and have been set up as test accounts, as is:
 
 * **Casting Assistant**
 
 A Casting Assistant is allowed to GET any single Movie or Actor, and to GET the lists of Movies and Actors.
 
+```bash
+casting-assistant@udacity.com:LZGGkHhRTZ5Cxg4
+```
+
 * **Casting Director**
 
 A Casting Director can do everything a Casting Assistant is allowed to. They can also remove (DELETE) any Movie or create (POST) one, and update (PATCH) any Movie or Actor.
 
+```bash
+casting-director@udacity.com:LZGGkHhRTZ5Cxg4
+```
+
 * **Executive Producer**
 
 An Executive Producer can do everything a Casting Director is allowed to. They can also remove (DELETE) any Actor or create (POST) one.
+```bash
+executive-producer@udacity.com:LZGGkHhRTZ5Cxg4
+```
+
+
 
 ## Getting Started
 
