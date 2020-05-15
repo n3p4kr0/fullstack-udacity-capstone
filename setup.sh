@@ -8,3 +8,6 @@ export $DB_URI=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/{DB_
 export $DB_TEST_URI=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_TEST_NAME}
 export $MOVIES_PER_PAGE=10
 export $ACTORS_PER_PAGE=10
+
+export $AUTH0_DOMAIN=dev-7z99wpjz.eu.auth0.com
+export $CLIENT_ID=fuSpdruotPgvrV3wypZHB8Rt45OC20IA
