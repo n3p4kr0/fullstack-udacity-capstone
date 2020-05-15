@@ -130,15 +130,15 @@ class MovieTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 404)
 
     def test_delete_movie_successful(self):
-        res = self.client().delete('/movies/17',
-                                   headers={
-                                       "Authorization": "Bearer {}".format(
-                                           self.executive_producer)
-                                   })
-        data = json.loads(res.data)
+    res = self.client().delete('/movies/17',
+                               headers={
+                                   "Authorization": "Bearer {}".format(
+                                       self.executive_producer)
+                               })
+    data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(data['success'], True)
+    self.assertEqual(res.status_code, 200)
+    self.assertEqual(data['success'], True)
 
     def test_delete_movie_unauthorized(self):
         res = self.client().delete('/movies/5',
