@@ -12,7 +12,7 @@ Users can create Movies and Actors in the database, and link them (if an Actor i
 
 - How to get a token?
 
-Just connect to the following URL, using the credentials for one of the following rols. You'll be returned an `access_token`.
+Just connect to the following URL, using the credentials for one of the following rols. You'll be returned an `access_token` for the selected role, that you'll have to use in the "TOKEN\_{ROLE}" environment variable (in .env file).
 
 https://dev-7z99wpjz.eu.auth0.com/authorize?audience=dev&response_type=token&client_id=fuSpdruotPgvrV3wypZHB8Rt45OC20IA&redirect_uri=https://capstone-casting-farem.herokuapp.com
 
