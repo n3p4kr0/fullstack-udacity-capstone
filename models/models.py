@@ -31,15 +31,17 @@ def setup_db(app, database_path=database_path):
 Map actors and movies
 '''
 movies_actors = db.Table('movies_actors',
-    db.Column('actor_id', db.Integer, db.ForeignKey('actors.id'), primary_key=True),
-    db.Column('movie_id', db.Integer, db.ForeignKey('movies.id'), primary_key=True)
-)
-
+                         db.Column('actor_id', db.Integer, db.ForeignKey(
+                             'actors.id'), primary_key=True),
+                         db.Column('movie_id', db.Integer, db.ForeignKey(
+                             'movies.id'), primary_key=True)
+                         )
 
 
 '''
 Movie
 '''
+
 
 class Movie(db.Model):
     __tablename__ = 'movies'
@@ -48,7 +50,7 @@ class Movie(db.Model):
     title = Column(String, nullable=False)
     release_date = Column(Date, nullable=False)
     actors = db.relationship('Actor', secondary=movies_actors, lazy=True,
-        backref=db.backref('movies', lazy=True))
+                             backref=db.backref('movies', lazy=True))
 
     def __init__(self, title, release_date):
         self.title = title
@@ -86,7 +88,7 @@ class Actor(db.Model):
     name = Column(String, nullable=False)
     age = Column(Integer, nullable=False)
     gender = Column(String, nullable=False)
-    
+
     def __init__(self, name, age, gender):
         self.name = name
         self.age = age
@@ -95,7 +97,7 @@ class Actor(db.Model):
     def insert(self):
         db.session.add(self)
         db.session.commit()
-        
+
     def update(self):
         db.session.commit()
 
@@ -111,4 +113,3 @@ class Actor(db.Model):
             'gender': self.gender,
             'movies': [movie.title for movie in self.movies]
         }
-
